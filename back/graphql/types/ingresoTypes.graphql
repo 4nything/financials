@@ -1,0 +1,17 @@
+type Ingeso {
+  id: ID!
+  concepto: String
+  monto: Float
+  fecha: String
+}
+
+type Query {
+  ingresos: [Ingeso]
+  ingreso(id: ID!): Ingeso
+}
+
+type Mutation {
+  saveIngreso(concepto: String, monto: Float, fecha: String): Ingeso
+  deleteIngreso(id: ID!): Boolean
+  updateIngreso(id: ID!, concepto: String, monto: Float, fecha: String): Ingeso
+}

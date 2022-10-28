@@ -1,0 +1,22 @@
+type Inversion {
+  id: ID!
+  concepto: String
+  monto: Float
+  fecha: String
+}
+
+type Query {
+  inversiones: [Inversion]
+  inversion(id: ID!): Inversion
+}
+
+type Mutation {
+  saveInversion(concepto: String, monto: Float, fecha: String): Inversion
+  deleteInversion(id: ID!): Boolean
+  updateInversion(
+    id: ID!
+    concepto: String
+    monto: Float
+    fecha: String
+  ): Inversion
+}

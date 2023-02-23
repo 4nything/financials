@@ -19,6 +19,6 @@ export class Income {
   @ManyToOne(() => PaymentMethod, (method) => method.id)
   paymentMethod: PaymentMethod;
 
-  @ManyToOne(() => User, (user) => user.incomes)
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 }

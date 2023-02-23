@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, Request, Put } from "@nestjs/common";
 import { SavingsService } from "./savings.service";
 import { CreateSavingDto } from "./dto/create-saving.dto";
 import { UpdateSavingDto } from "./dto/update-saving.dto";
+import { FHeaders } from "src/utils/enums/headers";
 
 @Controller("savings")
 export class SavingsController {
   constructor(private readonly savingsService: SavingsService) {}
 
   @Post()
-  create(@Body() createSavingDto: CreateSavingDto) {
-    return this.savingsService.create(createSavingDto);
+  create(@Body() createSavingDto: CreateSavingDto, @Request() request: Request) {
+    return this.savingsService.create(createSavingDto, request.headers[FHeaders.USER_ID]);
   }
 
   @Get()
@@ -22,7 +23,7 @@ export class SavingsController {
     return this.savingsService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(@Param("id") id: string, @Body() updateSavingDto: UpdateSavingDto) {
     return this.savingsService.update(+id, updateSavingDto);
   }

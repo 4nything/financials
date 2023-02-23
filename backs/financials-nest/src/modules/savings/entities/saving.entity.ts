@@ -1,6 +1,7 @@
-import { PaymentMethod } from "src/modules/payment-methods/entities/payment-method.entity";
-import { Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "@modules/users/entities/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 export class Saving {
   @PrimaryGeneratedColumn("increment")
   id: number;
@@ -14,6 +15,9 @@ export class Saving {
   @Column("timestamp")
   fecha: string;
 
-  @ManyToOne(() => PaymentMethod, (method) => method.id)
-  method: PaymentMethod;
+  @Column("boolean")
+  retiro: boolean;
+
+  @ManyToOne(() => User, (user) => user.id)
+  user: User;
 }

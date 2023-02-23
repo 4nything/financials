@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { JwtAuthGuard } from "@modules/auth/guards/jwt-auth.guard";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, Put } from "@nestjs/common";
+import { FHeaders } from "src/utils/enums/headers";
 import { BillsService } from "./bills.service";
 import { CreateBillDto } from "./dto/create-bill.dto";
 import { UpdateBillDto } from "./dto/update-bill.dto";
 
+@UseGuards(JwtAuthGuard)
 @Controller("bills")
 export class BillsController {
   constructor(private readonly billsService: BillsService) {}
 
   @Post()
-  create(@Body() createBillDto: CreateBillDto) {
-    return this.billsService.create(createBillDto);
+  create(@Body() createBillDto: CreateBillDto, @Request() request: any) {
+    return this.billsService.create(createBillDto, request.headers[FHeaders.USER_ID]);
   }
 
   @Get()
@@ -22,7 +25,7 @@ export class BillsController {
     return this.billsService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(@Param("id") id: string, @Body() updateBillDto: UpdateBillDto) {
     return this.billsService.update(+id, updateBillDto);
   }

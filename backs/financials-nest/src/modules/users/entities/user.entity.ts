@@ -23,9 +23,6 @@ export class User {
   @OneToMany(() => PaymentMethod, (paymentMethod) => paymentMethod.user)
   paymentMethods: PaymentMethod[];
 
-  @OneToMany(() => Income, (income) => income.id)
-  incomes: Income[];
-
   @BeforeInsert()
   generateId() {
     this.id = uuidv4();

@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, Put } from "@nestjs/common";
 import { FixedCostsService } from "./fixed-costs.service";
 import { CreateFixedCostDto } from "./dto/create-fixed-cost.dto";
 import { UpdateFixedCostDto } from "./dto/update-fixed-cost.dto";
+import { JwtAuthGuard } from "@modules/auth/guards/jwt-auth.guard";
+import { FHeaders } from "src/utils/enums/headers";
 
+@UseGuards(JwtAuthGuard)
 @Controller("fixed-costs")
 export class FixedCostsController {
   constructor(private readonly fixedCostsService: FixedCostsService) {}
 
   @Post()
-  create(@Body() createFixedCostDto: CreateFixedCostDto) {
-    return this.fixedCostsService.create(createFixedCostDto);
+  create(@Body() createFixedCostDto: CreateFixedCostDto, @Request() request: any) {
+    return this.fixedCostsService.create(createFixedCostDto, request.headers[FHeaders.USER_ID]);
   }
 
   @Get()
@@ -22,7 +25,7 @@ export class FixedCostsController {
     return this.fixedCostsService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(@Param("id") id: string, @Body() updateFixedCostDto: UpdateFixedCostDto) {
     return this.fixedCostsService.update(+id, updateFixedCostDto);
   }

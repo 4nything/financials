@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, Put } from "@nestjs/common";
 import { IncomesService } from "./incomes.service";
 import { CreateIncomeDto } from "./dto/create-income.dto";
 import { UpdateIncomeDto } from "./dto/update-income.dto";
@@ -25,7 +25,7 @@ export class IncomesController {
     return this.incomesService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(@Param("id") id: string, @Body() updateIncomeDto: UpdateIncomeDto) {
     return this.incomesService.update(+id, updateIncomeDto);
   }

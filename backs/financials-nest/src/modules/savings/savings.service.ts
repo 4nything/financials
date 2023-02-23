@@ -1,26 +1,50 @@
-import { Injectable } from "@nestjs/common";
+import { User } from "@models/user";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
 import { CreateSavingDto } from "./dto/create-saving.dto";
 import { UpdateSavingDto } from "./dto/update-saving.dto";
+import { Saving } from "./entities/saving.entity";
 
 @Injectable()
 export class SavingsService {
-  create(createSavingDto: CreateSavingDto) {
-    return "This action adds a new saving";
+  constructor(
+    @Inject("SAVING_REPOSITORY") private savingRepository: Repository<Saving>,
+    @Inject("USER_REPOSITORY") private userRepository: Repository<User>,
+  ) {}
+  async create(createSavingDto: CreateSavingDto, id: string) {
+    const user = await this.userRepository.findOneBy({ id });
+    return this.savingRepository.save(this.savingRepository.create({ ...createSavingDto, user }));
   }
 
-  findAll() {
-    return `This action returns all savings`;
+  async findAll() {
+    return await this.savingRepository.find({ relations: ["user"] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} saving`;
+  async findOne(id: number) {
+    return await this.savingRepository.findOne({ where: { id }, relations: ["user"] });
   }
 
-  update(id: number, updateSavingDto: UpdateSavingDto) {
-    return `This action updates a #${id} saving`;
+  async update(id: number, updateSavingDto: UpdateSavingDto) {
+    try {
+      const income = await this.savingRepository.findOneBy({ id });
+      await this.savingRepository.update(id, updateSavingDto);
+      return {
+        ...income,
+        ...updateSavingDto,
+      };
+    } catch (e) {
+      throw new HttpException("Bad Request", HttpStatus.BAD_REQUEST);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} saving`;
+  async remove(id: number) {
+    const income = await this.savingRepository.delete({ id });
+    if (!!income.affected) {
+      return {
+        statusCode: HttpStatus.OK,
+        message: "Income deleted.",
+      };
+    }
+    throw new HttpException("Income not found", 404);
   }
 }

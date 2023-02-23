@@ -25,7 +25,7 @@ export class IncomesService {
   }
 
   async findOne(id: number) {
-    return await this.incomeRepository.findOneBy({ id });
+    return await this.incomeRepository.findOne({ where: { id }, relations: ["user", "paymentMethod"] });
   }
 
   async update(id: number, updateIncomeDto: UpdateIncomeDto) {

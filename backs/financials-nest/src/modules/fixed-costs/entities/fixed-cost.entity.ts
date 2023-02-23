@@ -1,3 +1,4 @@
+import { User } from "@modules/users/entities/user.entity";
 import { PaymentMethod } from "src/modules/payment-methods/entities/payment-method.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -16,7 +17,10 @@ export class FixedCost {
   fecha: string;
 
   @ManyToOne(() => PaymentMethod, (method) => method.id)
-  method: PaymentMethod;
+  paymentMethod: PaymentMethod;
+
+  @ManyToOne(() => User, (user) => user.id)
+  user: User;
 
   @Column("boolean")
   automaticDebit: boolean;
